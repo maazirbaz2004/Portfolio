@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ContactStatus {
+  Pending
+  Done
+  Completed
+  Resolved
+}
+
+enum UserRole {
+  ADMIN
+}
+
+model Contact {
+  id         String        @id @default(cuid())
+  name       String
+  email      String
+  phone      String?
+  subject    String?
+  message    String        @db.Text
+  status     ContactStatus @default(Pending)
+
+  created_at DateTime      @default(now())
+  updated_at DateTime      @updatedAt
+
+  @@map("contacts")
+}
+
+model Profile {
+  id           String   @id @default(cuid())
+  auth_user_id String   @unique
+  name         String
+  email        String   @unique
+  role         UserRole @default(ADMIN)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("profiles")
+}
+
+model LoginAttempt {
+  id              String    @id @default(cuid())
+  ip_address      String    @unique
+  attempts        Int       @default(0)
+  last_attempt_at DateTime  @default(now())
+  blocked_until   DateTime?
+
+  @@map("login_attempts")
+}
+
