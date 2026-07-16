@@ -6,36 +6,42 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { submitContact } from "@/app/actions/contact";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phoneOrSubject: "",
+    phone: "",
+    subject: "",
     message: "",
   });
   const [errors, setErrors] = useState({
     name: "",
     email: "",
-    phoneOrSubject: "",
+    phone: "",
+    subject: "",
     message: "",
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error inline when user types
     setErrors((prev) => ({ ...prev, [name]: "" }));
+    if (submitError) setSubmitError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError("");
     
     const newErrors = {
       name: "",
       email: "",
-      phoneOrSubject: "",
+      phone: "",
+      subject: "",
       message: "",
     };
     let hasError = false;
@@ -54,8 +60,8 @@ export default function Contact() {
       hasError = true;
     }
 
-    if (!formData.phoneOrSubject.trim()) {
-      newErrors.phoneOrSubject = "Phone or subject is required.";
+    if (!formData.subject.trim()) {
+      newErrors.subject = "Subject is required.";
       hasError = true;
     }
 
@@ -74,14 +80,21 @@ export default function Contact() {
 
     setStatus("loading");
 
-    // Local state submission and console.log
-    console.log("Contact Form Submitted successfully:", formData);
-
-    setTimeout(() => {
-      setStatus("success");
-      setFormData({ name: "", email: "", phoneOrSubject: "", message: "" });
-      setErrors({ name: "", email: "", phoneOrSubject: "", message: "" });
-    }, 1500);
+    try {
+      const res = await submitContact(formData);
+      if (res.success) {
+        setStatus("success");
+        setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+        setErrors({ name: "", email: "", phone: "", subject: "", message: "" });
+      } else {
+        setStatus("error");
+        setSubmitError(res.error || "Failed to submit. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+      setSubmitError("Failed to connect to database. If you haven't set up Supabase yet, please configure DATABASE_URL in your .env file.");
+    }
   };
 
   return (
@@ -160,6 +173,13 @@ export default function Contact() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6 text-left">
                   
+                  {submitError && (
+                    <div className="flex items-start gap-2.5 p-4 rounded-xl bg-destructive/10 text-destructive text-xs font-semibold leading-relaxed">
+                      <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                      <span>{submitError}</span>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label
@@ -216,31 +236,52 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="phoneOrSubject"
-                      className="text-xs font-bold text-slate-705 dark:text-slate-350 uppercase tracking-wide"
-                    >
-                      Phone / Subject
-                    </label>
-                    <Input
-                      id="phoneOrSubject"
-                      name="phoneOrSubject"
-                      type="text"
-                      placeholder="e.g. +1 (555) 0199 or Collaboration opportunity"
-                      value={formData.phoneOrSubject}
-                      onChange={handleChange}
-                      className={`bg-slate-50 dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 ${
-                        errors.phoneOrSubject ? "border-destructive focus-visible:ring-destructive" : ""
-                      }`}
-                      disabled={status === "loading"}
-                    />
-                    {errors.phoneOrSubject && (
-                      <p className="text-xs text-destructive mt-1 flex items-center gap-1.5 font-medium">
-                        <AlertCircle className="h-3.5 w-3.5" />
-                        {errors.phoneOrSubject}
-                      </p>
-                    )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="phone"
+                        className="text-xs font-bold text-slate-705 dark:text-slate-350 uppercase tracking-wide"
+                      >
+                        Phone Number <span className="text-slate-400 dark:text-slate-500 font-normal lowercase">(optional)</span>
+                      </label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        type="text"
+                        placeholder="e.g. +1 (555) 0199"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="bg-slate-50 dark:bg-slate-900 border-slate-200/80 dark:border-slate-800"
+                        disabled={status === "loading"}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="subject"
+                        className="text-xs font-bold text-slate-705 dark:text-slate-350 uppercase tracking-wide"
+                      >
+                        Subject
+                      </label>
+                      <Input
+                        id="subject"
+                        name="subject"
+                        type="text"
+                        placeholder="Collaboration opportunity"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        className={`bg-slate-50 dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 ${
+                          errors.subject ? "border-destructive focus-visible:ring-destructive" : ""
+                        }`}
+                        disabled={status === "loading"}
+                      />
+                      {errors.subject && (
+                        <p className="text-xs text-destructive mt-1 flex items-center gap-1.5 font-medium">
+                          <AlertCircle className="h-3.5 w-3.5" />
+                          {errors.subject}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   <div className="space-y-2">
