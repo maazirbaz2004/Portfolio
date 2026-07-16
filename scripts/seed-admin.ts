@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { createClient } from "@supabase/supabase-js";
-import { UserRole } from "@prisma/client";
 import prisma from "../src/lib/db";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -83,7 +82,7 @@ async function main() {
           auth_user_id: authUserId,
           name: adminName,
           email: adminEmail,
-          role: UserRole.ADMIN,
+          role: "ADMIN",
         }
       });
       console.log("Profile updated:", updatedProfile);
@@ -94,7 +93,7 @@ async function main() {
           auth_user_id: authUserId,
           name: adminName,
           email: adminEmail,
-          role: UserRole.ADMIN,
+          role: "ADMIN",
         }
       });
       console.log("Profile created:", newProfile);
