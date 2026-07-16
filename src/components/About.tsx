@@ -74,7 +74,7 @@ export default function About() {
 
             {/* CTA Button */}
             <motion.div variants={itemVariants} className="pt-2">
-              <a href="#" download="resume.pdf">
+              <a href="/resume.pdf" download="resume.pdf">
                 <Button className="flex items-center gap-2">
                   <Download className="h-4 w-4" />
                   Download Resume
