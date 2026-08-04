@@ -23,7 +23,7 @@ const skillCategories = [
     title: "Databases",
     icon: <Database className="h-6 w-6 text-emerald-500" />,
     badgeVariant: "greenBadge" as const,
-    skills: ["PostgreSQL", "MySQL", "MongoDB", "Supabase"],
+    skills: ["PostgreSQL", "MySQL", "MongoDB", "Supabase", "Vector Databases"],
   },
   {
     title: "AI / Machine Learning",
@@ -63,7 +63,7 @@ export default function Skills() {
       className="py-20 sm:py-28 bg-white dark:bg-portfolio-darkBg relative overflow-hidden"
     >
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        
+
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-portfolio-accentBlue">

@@ -7,28 +7,28 @@ import { Card, CardContent } from "@/components/ui/card";
 const experienceData = [
   {
     id: 1,
-    role: "Software Engineering Intern",
-    company: "Tech Solutions Lab",
-    duration: "June 2025 – August 2025",
-    description: "Assisted in building custom Next.js frontend pages, optimizing database queries with Prisma, and designing scalable API routes. Contributed to responsive, mobile-first design updates.",
+    role: "MERN & DevOps Intern",
+    company: "Dafi Labs",
+    duration: "2024 – Present",
+    description: "Developed and maintained full-stack web applications using the MERN stack (MongoDB, Express, React, Node.js). Implemented CI/CD pipelines, automated deployment workflows, and managed cloud infrastructure to streamline operations.",
     icon: <Briefcase className="h-4 w-4 text-white" />,
     iconBg: "bg-blue-600",
   },
   {
     id: 2,
-    role: "Freelance Full-Stack Developer",
-    company: "Upwork & Fiverr / Client Projects",
-    duration: "2024 – Present",
-    description: "Developed and launched custom web applications, responsive portfolios, and administrative interfaces. Worked directly with clients to identify business goals, setup Supabase hosting, and design robust database schemas.",
+    role: "Web Development Intern",
+    company: "Brandive Media Solutions",
+    duration: "2023 – 2024",
+    description: "Collaborated with the design and engineering teams to build responsive web applications. Translated high-fidelity UI designs into interactive frontend components, ensuring cross-browser compatibility and optimal performance.",
     icon: <Briefcase className="h-4 w-4 text-white" />,
     iconBg: "bg-emerald-600",
   },
   {
     id: 3,
-    role: "Open-Source Contributor",
-    company: "AI & Web Tooling Communities",
-    duration: "2024 – Present",
-    description: "Contributed features and bug fixes to developer tools, CLI utilities, and LangChain ecosystem integrations. Focused on improving search performance and documentation for vector databases.",
+    role: "AI Intern",
+    company: "Optimus Activate",
+    duration: "2023",
+    description: "Explored foundational Artificial Intelligence concepts, including machine learning algorithms and natural language processing. Assisted in developing AI-driven solutions, analyzing datasets, and optimizing data pipelines for model training.",
     icon: <Star className="h-4 w-4 text-white" />,
     iconBg: "bg-purple-600",
   },
@@ -53,57 +53,37 @@ export default function Experience() {
           <div className="h-1 w-12 bg-portfolio-accentBlue mx-auto mt-4 rounded-full" />
         </div>
 
-        {/* Timeline Layout */}
-        <div className="relative max-w-3xl mx-auto">
-          {/* Vertical Center Line */}
-          <div className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-800 -translate-x-1/2" />
+        {/* Experience List Layout */}
+        <div className="max-w-3xl mx-auto space-y-6">
+          {experienceData.map((item) => (
+            <Card
+              key={item.id}
+              className="bg-slate-50 dark:bg-slate-950 border-slate-200/60 dark:border-slate-800/80 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <CardContent className="p-6 sm:p-8 flex flex-col sm:flex-row gap-5 sm:gap-6 items-start text-left">
+                {/* Icon */}
+                <div className={`flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl shadow-sm text-white ${item.iconBg}`}>
+                  {item.icon}
+                </div>
 
-          {/* Timeline Items */}
-          <div className="space-y-12">
-            {experienceData.map((item, idx) => {
-              const isEven = idx % 2 === 0;
-              return (
-                <div
-                  key={item.id}
-                  className={`relative flex flex-col sm:flex-row items-start ${
-                    isEven ? "sm:flex-row-reverse" : ""
-                  }`}
-                >
-                  {/* Timeline Badge/Dot */}
-                  <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 flex items-center justify-center h-8 w-8 rounded-full border border-white dark:border-slate-950 shadow-md bg-slate-900 z-10">
-                    <div className={`h-6 w-6 rounded-full flex items-center justify-center ${item.iconBg}`}>
-                      {item.icon}
+                {/* Content */}
+                <div className="flex-1 space-y-3 w-full">
+                  <div>
+                    <h3 className="font-bold text-lg sm:text-xl text-slate-900 dark:text-white leading-tight">
+                      {item.role}
+                    </h3>
+                    <div className="text-sm font-semibold text-portfolio-accentBlue mt-1">
+                      {item.company}
                     </div>
                   </div>
 
-                  {/* Left / Right Card Container */}
-                  <div className={`w-full sm:w-[calc(50%-2rem)] pl-12 sm:pl-0 ${isEven ? "sm:pr-8" : "sm:pl-8 text-left"}`}>
-                    <Card className="bg-slate-50 dark:bg-slate-950 border-slate-200/60 dark:border-slate-800/80 shadow-sm hover:shadow-md transition-shadow">
-                      <CardContent className="p-6 space-y-3 text-left">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white">
-                            {item.role}
-                          </h3>
-                          <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-500">
-                            <Calendar className="h-3 w-3" />
-                            <span>{item.duration}</span>
-                          </div>
-                        </div>
-
-                        <div className="text-xs font-semibold text-portfolio-accentBlue">
-                          {item.company}
-                        </div>
-
-                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
-                          {item.description}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </div>
+                  <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed font-normal pt-1">
+                    {item.description}
+                  </p>
                 </div>
-              );
-            })}
-          </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
       </div>
